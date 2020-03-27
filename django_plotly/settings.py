@@ -164,3 +164,4 @@ STATIC_ROOT = 'static'
 STATICFILES_DIRS = [
 os.path.join(BASE_DIR, 'django_plotly/static')
 ]
+X_FRAME_OPTIONS = 'ALLOW-FROM http://127.0.0.1:8000/'
