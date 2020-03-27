@@ -1,0 +1,4 @@
+plotly==4.5.4
+numpy==1.17.2
+matplotlib==3.1.1
+django-plotly-dash==1.1.5
