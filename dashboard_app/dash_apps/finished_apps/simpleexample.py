@@ -4,6 +4,11 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 import plotly.graph_objs as go
 from django_plotly_dash import DjangoDash
+from plotly.offline import iplot
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import os
 
 # app = DjangoDash('SimpleExample')   # replaces dash.Dash
 
@@ -37,20 +42,18 @@ from django_plotly_dash import DjangoDash
 # def callback_size(dropdown_color, dropdown_size):
 #     return "The chosen T-shirt is a %s %s one." %(dropdown_size,
 #                                                   dropdown_color)
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-app = DjangoDash('SimpleExample', external_stylesheets=external_stylesheets)
+# external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+app = DjangoDash('SimpleExample')
+
 app.layout = html.Div([
-    html.H1("Square Root slider graph"),
+    html.H1("Student marks slider graph"),
     dcc.Graph(id='slider-graph', animate=True, style={"backgroundColor":"#1a2d46", "color":"#ffffff"}),
-    dcc.Slider(
-        id='slider-updatemode',
-        marks = {i:'{}'.format(i) for i in range(20)},
-        max=20,
-        value=2,
-        step=1,
-        updatemode='drag'
-    ),
-    # html.Div(id='updatemode-output-container', style={'margin-top':20})
+    dcc.Markdown('''
+
+    ''',
+    id='slider-updatemode'),
+
+    html.Div(id='updatemode-output-container', style={'margin-top':20})
 ])
 #
 # @app.callback([
@@ -59,30 +62,27 @@ app.layout = html.Div([
 #     [Input('slider-updatemode', 'value')]
 # )
 
-
+#
 @app.callback(
     Output('slider-graph', 'figure'),
-    [Input('slider-updatemode', 'value')]
+    [Input('slider-updatemode', 'id')]
 )
 def disply_value(value):
-    x=[]
-    for i in range(value):
-        x.append(i)
-    y=[]
-    for i in range(value):
-        y.append(i*i)
-
-    graph = go.Scatter(
-        x=x,
-        y=y,
-        name='manipulate-graph'
-    )
-    layout = go.Layout(
-        paper_bgcolor='#27293d',
-        plot_bgcolor='rgba(0,0,0,0)',
-        xaxis = dict(range=[min(x),max(x)]),
-        yaxis = dict(range=[min(y),max(y)]),
-        font=dict(color='white')
-    )
-    # return {"data":graph, "layout":layout}, f'Value:{round(value, 1)} square:{value*value}'
-    return {"data":graph, "layout":layout}
+    working_dir = os.getcwd()
+    file_loc = working_dir + '/dashboard_app/dash_apps/student_marks.csv'
+    timesData = pd.read_csv(file_loc)
+    df = timesData.iloc[:100, :]
+    trace2 = go.Scatter(
+        x=df.Biology,
+        y=df.English,
+        mode="lines+markers",
+        name="Marks",
+        marker=dict(color='rgba(80, 26, 80, 0.8)'),
+        text=df.Name)
+    data = [trace2]
+    layout = dict(title='Student Marks',
+                  xaxis=dict(title='Biology', ticklen=5, zeroline=False),
+                  yaxis= dict(title='English', ticklen=5, zeroline=False),
+                  hovermode='closest'
+                  )
+    return {"data": data, "layout": layout}
