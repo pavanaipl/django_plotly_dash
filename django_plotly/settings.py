@@ -87,10 +87,10 @@ WSGI_APPLICATION = 'django_plotly.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dashboard',
-        'USER': 'local_user',
-        'PASSWORD': 'password',
-        'HOST': 'localhost',
+        'NAME': 'django',
+        'USER': 'pavanpostgres',
+        'PASSWORD': 'pavantest',
+        'HOST': 'testpavan.chaoinsk7xqx.ap-south-1.rds.amazonaws.com',
         'PORT': '5432',
     },
 }
